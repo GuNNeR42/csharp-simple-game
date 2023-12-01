@@ -2,7 +2,7 @@
 
 interface IFightable
 {
-    public void Attack(GameEntity gameEntity, int strength);
+    public void Attack(GameEntity gameEntity);
 
     public void Defend(int damage);
 }

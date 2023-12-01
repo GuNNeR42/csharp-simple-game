@@ -3,60 +3,60 @@
 public class Enemy : GameEntity
 {
     public bool IsBoss { get; set; }
+    public double DamageMultiplier { get; private set; }
+    public double ReceivedDamageMultiplier { get; private set; }
 
-    public Enemy(int health, int damage, bool isBoss) : base(health, damage)
+    public Enemy(int health, int damage, bool isBoss = false) : base(health, damage)
     {
         IsBoss = isBoss;
-    }
-
-    public override void Attack(GameEntity player)
-    {
-        /**
-         * If Enemy is IsBoss, damage multiplier is 1.5x
-         * Then performs attack on Player by launching the Player's Defend method
-         */
-        double damageMultiplier = 1.0;
-
-        if (this.IsBoss)
+        if (isBoss)
         {
-            damageMultiplier = 1.5;
-        }
-
-        if (!player.IsAlive)
-        {
-            return;
+            DamageMultiplier = 1.5;
+            ReceivedDamageMultiplier = 0.75;
         }
         else
+        {
+            DamageMultiplier = 1.0;
+            ReceivedDamageMultiplier = 1.0;
+        }
+    }
+
+
+    /// <summary>
+    /// Attacks specified player
+    /// Dealt damage is calculated as BaseDamage x Multiplier (if IsBoss, multiplier is 1.5x)
+    /// </summary>
+    /// <param name="player">Player instance</param>
+    public override void Attack(GameEntity player)
+    {
+        if (player.IsAlive)
         {
             /**
              * In case of non-int values, 
              * dealtDamage values will be floored to nearest int
              */
-            int dealtDamage = Convert.ToInt32(Math.Floor(this.Damage * damageMultiplier));
+            int dealtDamage = Convert.ToInt32(Math.Floor(this.BaseDamage * DamageMultiplier));
             player.Defend(dealtDamage);
         }
     }
 
+
+
+    /// <summary>
+    /// Substracts dealt damage from Enemy's HP
+    /// Boss has receivedDamageMultiplier set to 0.75x
+    /// </summary>
+    /// <param name="damage">Damage dealt</param>
     public override void Defend(int damage)
     {
-        /**
-         * If dealt damage is > 0
-         * Sets recievedDamageMultiplier (if Enemy is Boss, multiplier is 0.75x)
-         */
         if (damage > 0)
         {
-            double recievedDamageMultiplier = 1.0;
-            if (this.IsBoss)
-            {
-                recievedDamageMultiplier = 0.75;
-            }
-
             /**
              * In case of non-int values, 
-             * recievedDamage values will be Ceiled to nearest int
+             * receivedDamage values will be Ceiled to nearest int
              */
-            int recievedDamage = Convert.ToInt32(Math.Ceiling(this.Damage * recievedDamageMultiplier));
-            Health = Health - (recievedDamage);
+            int receivedDamage = Convert.ToInt32(Math.Ceiling(this.BaseDamage * ReceivedDamageMultiplier));
+            Health = Health - (receivedDamage);
         }
 
     }

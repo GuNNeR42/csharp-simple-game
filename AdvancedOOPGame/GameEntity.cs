@@ -3,7 +3,7 @@
 public abstract class GameEntity : IFightable
 {
     public int Health { get; set; }
-    public int Damage { get; set; }
+    public int BaseDamage { get; set; }
     public bool IsAlive
     {
         get { return Health > 0; }
@@ -12,7 +12,7 @@ public abstract class GameEntity : IFightable
     public GameEntity(int health, int damage)
     {
         Health = health;
-        Damage = damage;
+        BaseDamage = damage;
     }
 
     public abstract void Attack(GameEntity enemy);

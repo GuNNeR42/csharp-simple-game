@@ -9,13 +9,15 @@ public class Player : GameEntity, IHealable
         Armor = armor;
     }
 
+
+
+    /// <summary>
+    /// Heals the Player by set amount.
+    /// Max HP is capped to 100
+    /// </summary>
+    /// <param name="amount">Set amount to heal</param>
     public void Heal(int amount)
     {
-        /**
-         * If the Heal amount is > 0,
-         * adds the amount to Health and then if Health exceeds 100,
-         * caps Health to 100
-         */
         if(amount > 0)
         {
             this.Health += amount;
@@ -27,34 +29,30 @@ public class Player : GameEntity, IHealable
 
     }
 
+    /// <summary>
+    /// Substracts dealt damage from Player's HP
+    /// Armor lowers the damage dealt by it's amount.
+    /// </summary>
+    /// <param name="damage">Damage dealt to Player</param>
     public override void Defend(int damage)
     {
-        /**
-         * If the attack dmg. is > 0 and is greater than Player's armor,
-         * The difference between Damage and Armor will be subtracted from Health
-        **/
-
         if (damage > 0 && damage > this.Armor)
         {
             Health = Health - (damage - this.Armor);
         }
     }
 
+
+    /// <summary>
+    /// Attacks specified Enemy.
+    /// If the Enemy is killed, Player will be healed by 25 HP
+    /// </summary>
+    /// <param name="enemy">Enemy instance</param>
     public override void Attack(GameEntity enemy)
     {
-        /**
-         * If the selected enemy is alive,
-         * calls Defend method on specified enemy,
-         * if the enemy is not alive after the attack,
-         * adds 25 HP
-         */
-        if (!enemy.IsAlive)
+        if (enemy.IsAlive)
         {
-            return;
-        }
-        else
-        {
-            enemy.Defend(this.Damage);
+            enemy.Defend(this.BaseDamage);
             if (!enemy.IsAlive)
             {
                 Heal(25);
