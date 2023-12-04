@@ -6,14 +6,8 @@ public class Game
     public List<Player> Players { get; set; }
     public List<Enemy> Enemies { get; set; }
 
-    private int AlivePlayersCount
-    {
-        get { return Players.Count(player => player.IsAlive);}
-    }
-    private int AliveEnemiesCount
-    {
-        get { return Enemies.Count(enemy => enemy.IsAlive); }
-    }
+    private int AlivePlayersCount => Players.Count(player => player.IsAlive);
+    private int AliveEnemiesCount => Enemies.Count(enemy => enemy.IsAlive);
 
     public Game()
     {
@@ -45,16 +39,13 @@ public class Game
     /// </summary>
     private void ExecutePlayersTurn()
     {
-        foreach (Player player in Players)
+        foreach (Player player in Players.Where(player => player.IsAlive))
         {
-            foreach (Enemy enemy in Enemies)
+            foreach (Enemy enemy in Enemies.Where(enemy => enemy.IsAlive))
             {
-                if (enemy.IsAlive && player.IsAlive)
-                {
-                    player.Attack(enemy);
-                    Logger.Log(message: $"Player {nameof(player)} dealt {player.BaseDamage} damage to {nameof(enemy)} \n{nameof(enemy)} now has {enemy.Health} health.\n\n\n",
-                                color: ConsoleColor.Cyan);
-                }
+                player.Attack(enemy);
+                Logger.Log(message: $"Player {nameof(player)} dealt {player.BaseDamage} damage to {nameof(enemy)} \n{nameof(enemy)} now has {enemy.Health} health.\n\n\n",
+                            color: ConsoleColor.Cyan);
             }
         }
     }
@@ -66,25 +57,15 @@ public class Game
     /// </summary>
     private void ExecuteEnemiesTurn()
     {
-        foreach (Enemy enemy in Enemies)
-        {
-            foreach (Player player in Players)
+        foreach (Enemy enemy in Enemies.Where(enemy => enemy.IsAlive)) foreach (Player player in Players.Where(player => player.IsAlive))
             {
-                if (player.IsAlive && enemy.IsAlive)
-                {
-                    enemy.Attack(player);
-                    Logger.Log( message: $"Enemy {nameof(enemy)} dealt {enemy.BaseDamage * enemy.DamageMultiplier} damage to {nameof(player)} \n" +
-                        $"Player's shield absorbed {player.Armor} HP\n" + //tady nebude player.armor fungovat vždy
-                        $"{nameof(player)} now has {player.Health} health.\n\n\n",
-                                color: ConsoleColor.Cyan);
-
-                }
+                enemy.Attack(player);
+                Logger.Log(message: $"Enemy {nameof(enemy)} dealt {enemy.BaseDamage * enemy.DamageMultiplier} damage to {nameof(player)} \n" +
+                    $"Player's shield absorbed {player.Armor} HP\n" + //tady nebude player.armor fungovat vždy
+                    $"{nameof(player)} now has {player.Health} health.\n\n\n",
+                            color: ConsoleColor.Cyan);
             }
-        }
-
     }
-
-
 }
 
 

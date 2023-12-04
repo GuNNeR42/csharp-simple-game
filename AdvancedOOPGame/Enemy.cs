@@ -3,8 +3,8 @@
 public class Enemy : GameEntity
 {
     public bool IsBoss { get; set; }
-    public double DamageMultiplier { get; private set; }
-    public double ReceivedDamageMultiplier { get; private set; }
+    public double DamageMultiplier { get; private set; } = 1.0;
+    public double ReceivedDamageMultiplier { get; private set; } = 1.0;
 
     public Enemy(int health, int damage, bool isBoss = false) : base(health, damage)
     {
@@ -13,11 +13,6 @@ public class Enemy : GameEntity
         {
             DamageMultiplier = 1.5;
             ReceivedDamageMultiplier = 0.75;
-        }
-        else
-        {
-            DamageMultiplier = 1.0;
-            ReceivedDamageMultiplier = 1.0;
         }
     }
 
@@ -29,15 +24,12 @@ public class Enemy : GameEntity
     /// <param name="player">Player instance</param>
     public override void Attack(GameEntity player)
     {
-        if (player.IsAlive)
-        {
-            /**
-             * In case of non-int values, 
-             * dealtDamage values will be floored to nearest int
-             */
-            int dealtDamage = Convert.ToInt32(Math.Floor(this.BaseDamage * DamageMultiplier));
-            player.Defend(dealtDamage);
-        }
+        /**
+         * In case of non-int values, 
+         * dealtDamage values will be floored to nearest int
+         */
+        int dealtDamage = Convert.ToInt32(Math.Floor(this.BaseDamage * DamageMultiplier));
+        player.Defend(dealtDamage);
     }
 
 
@@ -56,7 +48,7 @@ public class Enemy : GameEntity
              * receivedDamage values will be Ceiled to nearest int
              */
             int receivedDamage = Convert.ToInt32(Math.Ceiling(this.BaseDamage * ReceivedDamageMultiplier));
-            Health = Health - (receivedDamage);
+            Health = Health - receivedDamage;
         }
 
     }

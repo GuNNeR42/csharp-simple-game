@@ -50,13 +50,10 @@ public class Player : GameEntity, IHealable
     /// <param name="enemy">Enemy instance</param>
     public override void Attack(GameEntity enemy)
     {
-        if (enemy.IsAlive)
+        enemy.Defend(this.BaseDamage);
+        if (!enemy.IsAlive)
         {
-            enemy.Defend(this.BaseDamage);
-            if (!enemy.IsAlive)
-            {
-                Heal(25);
-            }
+            Heal(25);
         }
     }
 }
